@@ -4,16 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mercurius"
-version = "0.1.0"
+dynamic = ["version"]  # MAJOR.MINOR.PATCH, defined once as Mercurius.__version__
 description = "Mercurius: Queue based pub/sub event system"
+readme = { file = "README.md", content-type = "text/markdown" }
 authors = [
     { name = "nomad_ii_damon" }
 ]
 
 requires-python = ">=3.10"
-dependencies = [
-    "python-dotenv>=1.0.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
@@ -23,14 +22,17 @@ dev = [
 [project.urls]
 homepage = "https://github.com/nomadiidamon/Mercurius"
 
-[project.scripts]
-mercurius = "Mercurius.main:main"
+[tool.setuptools.dynamic]
+version = { attr = "Mercurius.__version__" }
 
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 
 # Where pytest looks for tests.
 testpaths = ["tests"]
+pythonpath = ["src", "tools"]
 
 # Standard test discovery patterns.
 python_files = ["test_*.py"]
@@ -38,12 +40,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 
 # Registered markers.
-markers = [
-    "mercurius: tests for the Mercurius subsystem (event bus) - currently a stub package",
-    "utils: tests for the shared utils module",
-    "e2e: end-to-end tests requiring a live Ollama server (deselect with '-m \"not e2e\"')",
-    "slow: builds a wheel via pip (deselect with '-m \"not slow\"')",
-]
+markers = []
 
 # Fail loudly on unknown markers.
 addopts = "--strict-markers -ra"

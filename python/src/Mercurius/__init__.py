@@ -1,54 +1,67 @@
-"""
-Mercurius - Queue based event bus
+﻿"""
+Mercurius - generic, queue-based pub/sub event library.
 
-Mercurius: The messenger. Responsible for sending messages,
-broadcasting events, subsystem coordination, and other lifecycle hooks.
+Call Mercurius.init() once at startup and Mercurius.shutdown() at exit.
 """
-
-import logging
+import threading
 from typing import Optional
 
-from .bus import Event, EventBus, EventType
+from . import runtime
+from .event import Event
+from .event_bus import EventBus
+from .event_queue import EventQueue
+from .event_type import EventType
+from .events import ApplicationEvent, ErrorEvent, FileEvent, MessageEvent
+from .runtime import init, is_initialized, shutdown
+from .subscriber import BaseSubscriber, Subscriber
+from .subscription import Subscription
 
-logger = logging.getLogger(__name__)
+__version__ = "0.1.0"
 
 __all__ = [
+    "ApplicationEvent",
+    "BaseSubscriber",
+    "ErrorEvent",
     "Event",
     "EventBus",
+    "EventQueue",
     "EventType",
-    "get_bus",
-    "initialize_bus",
-    "shutdown_bus",
-    "publish_event",
+    "FileEvent",
+    "MessageEvent",
+    "Subscriber",
+    "Subscription",
+    "get_default_bus",
+    "init",
+    "is_initialized",
+    "runtime",
+    "shutdown",
+    "shutdown_default_bus",
 ]
 
-_bus: Optional[EventBus] = None
+_default_bus: Optional[EventBus] = None
+_default_lock = threading.Lock()
 
 
-def get_bus() -> Optional[EventBus]:
-    """Return the process-wide bus, or None if it hasn't been initialized."""
-    return _bus
+def get_default_bus() -> EventBus:
+    """
+    Return the process-wide bus. It is created (and Mercurius initialized, without
+    a warning) on first use; a stopped bus is restarted, a shut-down one replaced.
+    """
+    global _default_bus
+    with _default_lock:
+        bus = _default_bus
+        if bus is None or bus.is_closed:
+            runtime.init()
+            _default_bus = EventBus("default", _warn_uninitialized=False)
+        elif not bus.is_running:
+            bus.start()
+        return _default_bus
 
 
-def initialize_bus() -> EventBus:
-    """Create and start the process-wide bus (idempotent)."""
-    global _bus
-    if _bus is None or not _bus.is_running:
-        _bus = EventBus()
-        _bus.start()
-    return _bus
-
-
-def shutdown_bus(drain: bool = True) -> None:
-    """Stop the process-wide bus and release the singleton."""
-    global _bus
-    if _bus is not None:
-        _bus.stop(drain=drain)
-        _bus = None
-
-
-def publish_event(event_type: EventType, source: str = "", payload: Optional[dict] = None) -> None:
-    """Publish to the process-wide bus; no-op if it isn't running."""
-    bus = get_bus()
-    if bus is not None and bus.is_running:
-        bus.publish(Event(type=event_type, source=source, payload=payload or {}))
+def shutdown_default_bus(drain: bool = True) -> None:
+    """Shut down the process-wide bus and release it."""
+    global _default_bus
+    with _default_lock:
+        bus, _default_bus = _default_bus, None
+    if bus is not None:
+        bus.shutdown(drain=drain)

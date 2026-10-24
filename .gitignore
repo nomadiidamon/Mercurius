@@ -1,12 +1,21 @@
 # Python
 
 ## Python artifacts
-*.pyc
-python/src/Mercurius/__pycache__/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 ## Virtual environment
 .venv/
+venv/
 ## PyTest
 .pytest_cache/
+python/test_output.txt
 ## VS Code settings
 .vscode/
 ## Build artifacts
@@ -20,3 +29,21 @@ build/
 *.obj
 *.exe
 *.out
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+*.exp
+
+## Premake5 generated
+bin/
+bin-int/
+obj/
+*.sln
+*.vcxproj*
+Makefile
+*.make
+.vs/
