@@ -1,2 +1,2 @@
 # Mercurius
-Computer hardware detection utility
+Queue-based pub/sub event bus

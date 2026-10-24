@@ -1,0 +1,22 @@
+# Python
+
+## Python artifacts
+*.pyc
+python/src/Mercurius/__pycache__/
+## Virtual environment
+.venv/
+## PyTest
+.pytest_cache/
+## VS Code settings
+.vscode/
+## Build artifacts
+build/
+
+
+# C++
+
+## C++ artifacts
+*.o
+*.obj
+*.exe
+*.out

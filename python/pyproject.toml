@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mercurius"
+version = "0.1.0"
+description = "Mercurius: Queue based pub/sub event system"
+authors = [
+    { name = "nomad_ii_damon" }
+]
+
+requires-python = ">=3.10"
+dependencies = [
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[project.urls]
+homepage = "https://github.com/nomadiidamon/Mercurius"
+
+[project.scripts]
+mercurius = "Mercurius.main:main"
+
+
+[tool.pytest.ini_options]
+
+# Where pytest looks for tests.
+testpaths = ["tests"]
+
+# Standard test discovery patterns.
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Registered markers.
+markers = [
+    "mercurius: tests for the Mercurius subsystem (event bus) - currently a stub package",
+    "utils: tests for the shared utils module",
+    "e2e: end-to-end tests requiring a live Ollama server (deselect with '-m \"not e2e\"')",
+    "slow: builds a wheel via pip (deselect with '-m \"not slow\"')",
+]
+
+# Fail loudly on unknown markers.
+addopts = "--strict-markers -ra"
