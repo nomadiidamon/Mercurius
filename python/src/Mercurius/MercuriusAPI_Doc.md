@@ -2,13 +2,9 @@
 
 Mercurius provides a process-wide, thread-safe, queue-based pub/sub bus. `publish()` enqueues without waiting; one background thread dispatches events in FIFO order. Subscriber callbacks run on that dispatch thread, and an exception from one callback is logged without stopping delivery to the others.
 
-Mercurius owns the canonical event vocabulary used by all subsystems. Janus publishes lifecycle and model events, Faber publishes message traffic, Mentis records context and memory events using these same `EventType` values, and MCP servers publish tool activity when configured to do so. Mentis re-exports `ContextEventType` as a compatibility alias of `Mercurius.EventType`; it is not a separate enum.
-
 ## Events
 
 `EventType` values are `STARTUP`, `SHUTDOWN`, `MODEL_LOADED`, `MODEL_UNLOADED`, `INFERENCE_RUN`, `STATE_CHANGED`, `ERROR`, `WARNING`, `MESSAGE_SENT`, `MESSAGE_RECEIVED`, `CONVERSATION_CONDENSED`, `MEMORY_STORED`, `USER_MEMORY_UPDATED`, `TOOL_INVOKED`, `TOOL_RESULT`, `TOOL_CONFIRMATION_REQUIRED`, and `CUSTOM`. 
-
-`INFERENCE_RUN` and `STATE_CHANGED` cover Mentis context events; both are first-class bus types, not remapped to `CUSTOM`.
 
 An `Event` has `type`, `payload` (dictionary), `source`, and ISO-formatted `timestamp`. `Event.to_dict()` returns a serializable dictionary.
 

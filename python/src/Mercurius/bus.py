@@ -23,14 +23,14 @@ class EventType(Enum):
     WARNING = "warning"
     INFERENCE_RUN = "inference_run"
     STATE_CHANGED = "state_changed"
-    # Conversation traffic to/from models (published by Faber.messaging)
+    # Conversation traffic to/from models
     MESSAGE_SENT = "message_sent"
     MESSAGE_RECEIVED = "message_received"
-    # Memory intents (published by Mentis when memory operations run)
+    # Memory intents
     CONVERSATION_CONDENSED = "conversation_condensed"
     MEMORY_STORED = "memory_stored"
     USER_MEMORY_UPDATED = "user_memory_updated"
-    # MCP tool server activity (published by mcp/ servers)
+    # MCP tool server activity
     TOOL_INVOKED = "tool_invoked"
     TOOL_RESULT = "tool_result"
     TOOL_CONFIRMATION_REQUIRED = "tool_confirmation_required"
