@@ -2,6 +2,8 @@
 
 Queue-based, thread-safe pub/sub event library. Mercurius defines **how events move**, not what they mean: you bring the event types, it brings FIFO delivery, queues and subscriptions.
 
+Mercurius was developed by abstracting useful and common logic from [Domus-AI](https://github.com/nomadiidamon/Domus-AI).
+
 > Status: v0.1.0. The Python implementation is available. A C++ implementation is planned.
 
 ## Features
