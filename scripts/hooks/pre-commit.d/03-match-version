@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+ROOT="$(git rev-parse --show-toplevel)"
+PACKAGE_FILE="$ROOT/python/src/Mercurius/__init__.py"
+DOXYFILE="$ROOT/Doxyfile"
+PACKAGE_VERSION=$(sed -n 's/^__version__ = "\([^"]*\)"/\1/p' "$PACKAGE_FILE")
+DOC_VERSION=$(sed -n 's/^PROJECT_NUMBER[[:space:]]*=[[:space:]]*//p' "$DOXYFILE" | tr -d '"[:space:]')
+
+echo "Checking package version ($PACKAGE_VERSION) against Doxygen version ($DOC_VERSION)..."
+
+if [ -z "$PACKAGE_VERSION" ] || [ -z "$DOC_VERSION" ]; then
+	echo "ERROR: Could not read both versions from the package and Doxyfile."
+	exit 1
+fi
+
+if [ "$PACKAGE_VERSION" != "$DOC_VERSION" ]; then
+	echo "ERROR: Version mismatch: package=$PACKAGE_VERSION, Doxyfile=$DOC_VERSION"
+	exit 1
+fi
+
+echo "Package and Doxygen versions match."

@@ -1,40 +1,60 @@
-﻿# Mercurius Concepts
+# Mercurius Concepts
 
-**Mercurius defines how events move, not what they mean.** Applications own the meaning.
+**Mercurius defines how events move, not what they mean.** Applications own
+event meaning and the vocabulary used by their subscribers.
 
 ## Event
-Something that happened: a `type`, a `payload`, and metadata (`source`, `timestamp`). Event types are plain strings so any application can define its own vocabulary.
+
+An event carries a string `type`, a dictionary `payload`, and metadata:
+`source` and an ISO-formatted `timestamp`. Event types are application-defined;
+Mercurius does not impose a required naming scheme. Ready-made event subclasses
+are conveniences, not a required vocabulary.
 
 ## Runtime
-Call `Mercurius.init()` once at start-up and `Mercurius.shutdown()` at exit. The runtime tracks every live bus and its queues; shutting it down shuts down all of them. A bus created without `init()` auto-initializes the runtime and warns once.
+
+The process-wide runtime tracks live buses. Call `Mercurius.init()` during
+startup and `Mercurius.shutdown()` during cleanup. The runtime shuts down all
+registered buses, and also registers cleanup for interpreter exit. Constructing
+a bus before calling `init()` initializes the runtime automatically and warns
+once.
 
 ## EventBus
-The object you use. You publish events to it and subscribe to it. Create as many independent buses as you like; `get_default_bus()` offers one shared process-wide bus when you want that.
+
+An `EventBus` publishes events to its default queue and any custom queues
+created on it. Separate buses have separate subscriptions and queues.
+`get_default_bus()` provides a process-wide convenience bus when a shared bus
+is appropriate.
 
 ## Queue
-A queue is a FIFO delivery path with its own worker thread. Every bus has a **default queue**; you can add **custom queues** so independent consumers get independent delivery (a slow consumer does not delay a fast one).
 
-A queue does not have to receive every event. It can be given an allow-list of event types and/or a predicate; events it does not accept are ignored before they are stored.
+A queue is an independent FIFO delivery path with its own worker thread. Each
+bus starts with a default queue. Custom queues can separate consumers so a
+slow callback on one queue does not block callbacks on another.
 
-## Subscriber
-An object with `on_event(event)`; a plain function works too. It receives only the event types it subscribed to. `BaseSubscriber` is an optional helper that tracks the subscriptions an object creates.
+An optional event-type allow-list, predicate, or both can filter a queue.
+Filtering happens as the event is published; the queue does not enqueue events
+it rejects.
 
-## Subscription
-The relationship `event types + subscriber + queue`, returned by `subscribe()`. Call `unsubscribe()` to end it. It carries counters for debugging.
+## Subscriber and subscription
 
-## Guarantees
+A subscriber can be an object with `on_event(event)` or a callable. It receives
+only events whose types match its subscription. `BaseSubscriber` is an optional
+helper for tracking and releasing subscriptions.
 
-- **FIFO per queue.** Events published to one queue are delivered in publish order. Across queues there is no ordering.
-- **Non-blocking publish.** Subscriber code never runs on the publisher's thread.
-- **Failure isolation.** A subscriber exception is logged and does not stop other subscribers or the queue.
-- **Thread safety.** Publishing, subscribing and unsubscribing may happen from any thread. Subscribers on one queue run one at a time.
+A `Subscription` represents the relationship between event types, a subscriber,
+and a queue. It can be unsubscribed directly and exposes counters useful for
+debugging. A subscription keeps its subscriber alive until it is released.
 
-## Lifetime
+## Lifecycle
 
-- The bus does not own your subscriber. A subscription holds a reference only until it is released.
-- `unsubscribe()` releases one subscription; it is safe to repeat.
-- `stop()` halts workers but keeps subscriptions; `start()` resumes. `shutdown()` halts workers, releases all subscriptions and closes the bus for good (its queues are dropped, and it can no longer create queues or accept subscriptions).
-- With `stop(drain=True)`, events published by a queue's own callbacks are still delivered until the queue is empty; other threads' publishes are dropped.
+`stop()` stops a bus's workers but retains its queues and subscriptions;
+`start()` resumes it. `shutdown()` stops workers, releases subscriptions, and
+closes the bus permanently. A closed bus cannot create queues or subscriptions.
 
-## Not included (yet)
-Persistence, replay, cross-process delivery, priorities, retries, bounded queues and worker pools are out of scope for v0.1.
+With `drain=True`, a queue processes pending events before stopping. Events
+published by that queue's own callbacks during the drain are also processed;
+otherwise-accepted publishes from other threads after stopping begins are
+dropped. With `drain=False`, pending events are discarded.
+
+For exact guarantees and edge cases, see [Semantics](Semantics.md). For the
+implementation structure, see [Architecture](Architecture.md).
