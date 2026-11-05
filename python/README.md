@@ -16,9 +16,9 @@ Requires Python 3.10 or newer. Install from this directory with
 
 Run every example with `scripts/run_examples.bat` (Windows) or
 `scripts/run_examples.sh`. Package metadata is read from
-[`../project.ini`](../project.ini) by `setup.py`.
+`../project.ini` by `setup.py`.
 
 A C++ implementation is planned but not yet implemented.
 
-See the [Python API reference](../docs/Mercurius.md), the [project overview](../README.md),
-and [Python examples](../examples/python).
+See the [Python API reference](https://nomadiidamon.github.io/Mercurius/PythonAPI.html), the [project overview](https://nomadiidamon.github.io/Mercurius/index.html),
+and [Python examples](https://nomadiidamon.github.io/Mercurius/examples.html).
