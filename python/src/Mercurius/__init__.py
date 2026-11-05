@@ -16,7 +16,7 @@ from .runtime import init, is_initialized, shutdown
 from .subscriber import BaseSubscriber, Subscriber
 from .subscription import Subscription
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 __all__ = [
     "ApplicationEvent",
