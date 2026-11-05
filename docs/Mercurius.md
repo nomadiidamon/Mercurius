@@ -1,3 +1,5 @@
+@page PythonAPI Python API
+
 # Mercurius Python API
 
 This reference covers the current Python package. For the project model, start
