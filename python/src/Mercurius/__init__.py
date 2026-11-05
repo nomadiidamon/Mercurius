@@ -1,4 +1,4 @@
-﻿"""
+"""
 Mercurius - generic, queue-based pub/sub event library.
 
 Call Mercurius.init() once at startup and Mercurius.shutdown() at exit.
@@ -16,7 +16,7 @@ from .runtime import init, is_initialized, shutdown
 from .subscriber import BaseSubscriber, Subscriber
 from .subscription import Subscription
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 __all__ = [
     "ApplicationEvent",

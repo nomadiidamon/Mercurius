@@ -16,6 +16,7 @@ venv/
 ## PyTest
 .pytest_cache/
 python/test_output.txt
+python/project.ini
 ## VS Code settings
 .vscode/
 ## Build artifacts

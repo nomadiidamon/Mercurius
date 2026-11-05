@@ -3,27 +3,15 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mercurius"
-dynamic = ["version"]  # MAJOR.MINOR.PATCH, defined once as Mercurius.__version__
-description = "Mercurius: Queue based pub/sub event system"
-readme = { file = "README.md", content-type = "text/markdown" }
-authors = [
-    { name = "nomad_ii_damon" }
-]
+name = "mercurius-events"
+dynamic = ["version", "description", "readme", "license", "authors", "requires-python", "urls"]  # from ../project.ini via setup.py
 
-requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
 ]
-
-[project.urls]
-homepage = "https://github.com/nomadiidamon/Mercurius"
-
-[tool.setuptools.dynamic]
-version = { attr = "Mercurius.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,4 +1,6 @@
-"""Custom queues: independent FIFO delivery paths on one bus."""
+"""@example custom_queue.py
+
+Custom queues: independent FIFO delivery paths on one bus."""
 import threading
 
 import Mercurius

@@ -14,6 +14,11 @@ def test_examples_exist():
 
 
 @pytest.mark.parametrize("example", EXAMPLES, ids=lambda p: p.name)
+def test_example_has_doxygen_marker(example):
+    assert example.read_text(encoding="utf-8").startswith(f'"""@example {example.name}')
+
+
+@pytest.mark.parametrize("example", EXAMPLES, ids=lambda p: p.name)
 def test_example_runs_cleanly(example):
     env = {**os.environ, "PYTHONPATH": str(ROOT / "python" / "src")}
     result = subprocess.run(

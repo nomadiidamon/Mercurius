@@ -7,6 +7,22 @@ payloads, and Mercurius provides queues, subscriptions, and delivery.
 Mercurius was developed by abstracting useful and common logic from
 [Domus-AI](https://github.com/nomadiidamon/Domus-AI).
 
+## Status
+
+Current version: 0.5.0. Project metadata (name, version, license, Python
+requirement) lives in [project.ini](project.ini).
+
+| Implementation | State |
+|---|---|
+| Python (`mercurius-events`, Python 3.10+) | Implemented; see [python/](python/) |
+| C++ | Planned, not yet implemented; `cpp/` and `bindings/` are empty placeholders |
+
+## Examples
+
+Runnable Python examples are in [examples/python](examples/python). Run all of
+them with `python/scripts/run_examples.bat` (Windows) or
+`python/scripts/run_examples.sh`.
+
 ## Documentation
 
 - [Concepts](docs/Concepts.md) introduces Mercurius's main pieces—events,

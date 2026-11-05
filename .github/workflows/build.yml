@@ -1,0 +1,155 @@
+name: Build and Publish Python Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.10"
+
+jobs:
+  verify:
+    name: Verify version and run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out workflow ref
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install package and test dependencies
+        run: |
+          set -euo pipefail
+          echo "Installing mercurius-events and its development dependencies..."
+          python -m pip install ".[dev]"
+        working-directory: python
+
+      - name: Read package version
+        id: package_version
+        working-directory: python
+        run: |
+          set -euo pipefail
+          echo "Reading __version__ from mercurius-events..."
+          PACKAGE_VERSION="$(python -c 'from Mercurius import __version__; print(__version__)')"
+          if [ -z "$PACKAGE_VERSION" ]; then
+            echo "::error::Could not determine package version from Mercurius.__version__."
+            exit 1
+          fi
+          echo "::notice title=Package version::$PACKAGE_VERSION"
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify package version matches project.ini and Doxyfile
+        env:
+          PACKAGE_VERSION: ${{ steps.package_version.outputs.version }}
+        run: |
+          set -euo pipefail
+          INI_VERSION="$(sed -n '/^\[project\]/,/^\[/s/^version[[:space:]]*=[[:space:]]*//p' ../project.ini | tr -d '"[:space:]')"
+          DOC_VERSION="$(sed -n 's/^PROJECT_NUMBER[[:space:]]*=[[:space:]]*//p' ../Doxyfile | tr -d '"[:space:]')"
+          echo "Package version: $PACKAGE_VERSION"
+          echo "project.ini version: $INI_VERSION"
+          echo "Doxyfile version: $DOC_VERSION"
+          if [ -z "$INI_VERSION" ] || [ -z "$DOC_VERSION" ] || [ "$PACKAGE_VERSION" != "$INI_VERSION" ] || [ "$PACKAGE_VERSION" != "$DOC_VERSION" ]; then
+            echo "::error title=Version mismatch::Package, project.ini, and Doxyfile versions must match."
+            exit 1
+          fi
+          echo "All versions match."
+        working-directory: python
+
+      # A release tag must match the version embedded in the package.
+      - name: Verify version matches Git tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          PACKAGE_VERSION: ${{ steps.package_version.outputs.version }}
+        run: |
+          set -euo pipefail
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          echo "Package version: $PACKAGE_VERSION"
+          echo "Git tag version: $TAG_VERSION"
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error title=Version mismatch::Package $PACKAGE_VERSION does not match tag $TAG_VERSION."
+            exit 1
+          fi
+          echo "Package version matches the release tag."
+
+      - name: Run tests
+        run: |
+          set -euo pipefail
+          echo "Running the full Python test suite..."
+          python -m pytest -ra
+          echo "All Python tests passed."
+        working-directory: python
+
+  build:
+    name: Build Python distributions
+    runs-on: ubuntu-latest
+    needs: verify
+
+    steps:
+      - name: Check out workflow ref
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install build tools
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade build twine
+          python -m build --version
+          python -m twine --version
+
+      - name: Build distributions
+        run: |
+          set -euo pipefail
+          echo "Building source and wheel distributions from python/..."
+          python -m build --verbose
+        working-directory: python
+
+      - name: Check distributions
+        run: |
+          set -euo pipefail
+          echo "Validating generated distributions..."
+          ls -lh dist/
+          python -m twine check dist/*
+        working-directory: python
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v5
+        with:
+          name: python-package-distributions
+          path: python/dist/
+
+  publish:
+    name: Publish to PyPI
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mercurius-events
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

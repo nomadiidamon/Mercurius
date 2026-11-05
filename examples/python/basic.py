@@ -1,4 +1,6 @@
-"""Basic Mercurius usage: object subscriber, callable subscriber, unsubscribe."""
+"""@example basic.py
+
+Basic Mercurius usage: object subscriber, callable subscriber, unsubscribe."""
 import Mercurius
 from Mercurius import Event, EventBus
 

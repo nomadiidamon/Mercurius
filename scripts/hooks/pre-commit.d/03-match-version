@@ -2,21 +2,23 @@
 
 set -e
 ROOT="$(git rev-parse --show-toplevel)"
+INI_FILE="$ROOT/project.ini"
 PACKAGE_FILE="$ROOT/python/src/Mercurius/__init__.py"
 DOXYFILE="$ROOT/Doxyfile"
+INI_VERSION=$(sed -n '/^\[project\]/,/^\[/s/^version[[:space:]]*=[[:space:]]*//p' "$INI_FILE" | tr -d '"[:space:]')
 PACKAGE_VERSION=$(sed -n 's/^__version__ = "\([^"]*\)"/\1/p' "$PACKAGE_FILE")
 DOC_VERSION=$(sed -n 's/^PROJECT_NUMBER[[:space:]]*=[[:space:]]*//p' "$DOXYFILE" | tr -d '"[:space:]')
 
-echo "Checking package version ($PACKAGE_VERSION) against Doxygen version ($DOC_VERSION)..."
+echo "Checking project.ini version ($INI_VERSION) against Doxygen ($DOC_VERSION) and package ($PACKAGE_VERSION)..."
 
-if [ -z "$PACKAGE_VERSION" ] || [ -z "$DOC_VERSION" ]; then
-	echo "ERROR: Could not read both versions from the package and Doxyfile."
+if [ -z "$INI_VERSION" ] || [ -z "$DOC_VERSION" ] || [ -z "$PACKAGE_VERSION" ]; then
+	echo "ERROR: Could not read versions from project.ini, the Doxyfile, and the package."
 	exit 1
 fi
 
-if [ "$PACKAGE_VERSION" != "$DOC_VERSION" ]; then
-	echo "ERROR: Version mismatch: package=$PACKAGE_VERSION, Doxyfile=$DOC_VERSION"
+if [ "$INI_VERSION" != "$DOC_VERSION" ] || [ "$INI_VERSION" != "$PACKAGE_VERSION" ]; then
+	echo "ERROR: Version mismatch: project.ini=$INI_VERSION, Doxyfile=$DOC_VERSION, package=$PACKAGE_VERSION"
 	exit 1
 fi
 
-echo "Package and Doxygen versions match."
+echo "project.ini, Doxygen, and package versions match."

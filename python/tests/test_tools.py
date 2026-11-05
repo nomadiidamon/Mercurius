@@ -21,6 +21,7 @@ def tree(tmp_path):
     touch("python/dist/pkg.whl")
     touch("python/pkg.egg-info/PKG-INFO")
     touch("python/test_output.txt")
+    touch("python/project.ini")
     touch("python/tests/stray.pyc")
     touch("examples/python/__pycache__/e.pyc")
     # to be kept
@@ -29,6 +30,7 @@ def tree(tmp_path):
     touch(".venv/lib/__pycache__/x.pyc")
     touch(".git/objects/x.pyc")
     touch("test_output.txt")            # only python/test_output.txt is an artifact
+    touch("project.ini")                # only the copy under python/ is an artifact
     return tmp_path
 
 
@@ -45,6 +47,7 @@ def test_find_artifacts(tree):
         "python/dist",
         "python/pkg.egg-info",
         "python/test_output.txt",
+        "python/project.ini",
         "python/tests/stray.pyc",
         "examples/python/__pycache__",
     }
@@ -80,6 +83,7 @@ def test_confirmed_clean_removes_artifacts_only(monkeypatch, tree):
     assert clean.find_artifacts(tree) == []
     assert (tree / "python/src/pkg/mod.py").exists()
     assert (tree / "cpp/build/keep.o").exists()
+    assert (tree / "project.ini").exists()
     assert (tree / ".venv/lib/__pycache__/x.pyc").exists()
 
 

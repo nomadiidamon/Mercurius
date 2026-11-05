@@ -1,3 +1,5 @@
+@page Architecture Architecture
+
 # Mercurius Architecture
 
 Mercurius is currently implemented as a Python package in
@@ -5,7 +7,8 @@ Mercurius is currently implemented as a Python package in
 Python standard library at runtime. The repository also contains its tests in
 [`python/tests`](../python/tests), runnable examples in
 [`examples/python`](../examples/python), and project documentation in this
-directory. There is no C++ implementation in the repository.
+directory. A C++ implementation is planned but not yet implemented; `cpp/` and
+`bindings/` are empty placeholders.
 
 ## Modules
 

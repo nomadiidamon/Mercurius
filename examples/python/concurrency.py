@@ -1,4 +1,4 @@
-"""
+"""@example concurrency.py
 Concurrency: publishing from many threads.
 
   * publish(), subscribe() and unsubscribe() are thread-safe.

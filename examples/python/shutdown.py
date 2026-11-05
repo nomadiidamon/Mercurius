@@ -1,4 +1,4 @@
-"""
+"""@example shutdown.py
 stop() versus shutdown().
 
   stop()      halts the worker threads. Subscriptions are KEPT, so start() resumes

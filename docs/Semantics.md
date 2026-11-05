@@ -1,3 +1,5 @@
+@page Semantics Semantics
+
 # Mercurius Semantics
 
 This document describes behavior provided by the current Python implementation.

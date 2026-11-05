@@ -1,4 +1,4 @@
-"""
+"""@example base_subscriber.py
 BaseSubscriber and the ready-made event classes.
 
 BaseSubscriber is optional (any object with on_event() works). It adds

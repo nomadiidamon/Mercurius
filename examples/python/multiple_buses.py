@@ -1,4 +1,4 @@
-"""
+"""@example multiple_buses.py
 Several independent buses in one process.
 
 Each EventBus has its own queues, subscriptions and worker threads, so buses

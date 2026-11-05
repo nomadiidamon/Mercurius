@@ -1,3 +1,5 @@
+@page Concepts Concepts
+
 # Mercurius Concepts
 
 **Mercurius defines how events move, not what they mean.** Applications own

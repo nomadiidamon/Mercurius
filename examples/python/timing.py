@@ -1,4 +1,4 @@
-"""
+"""@example timing.py
 Timing: what runs when, and on which thread.
 
   * publish() returns immediately; it never runs subscriber code.

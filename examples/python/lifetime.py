@@ -1,4 +1,4 @@
-"""
+"""@example lifetime.py
 Subscriber lifetime.
 
 Rules demonstrated here:

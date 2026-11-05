@@ -1,4 +1,6 @@
-"""Domus-AI style layering: the application owns its event vocabulary."""
+"""@example app_events.py
+
+Domus-AI style layering: the application owns its event vocabulary."""
 from enum import Enum
 
 import Mercurius

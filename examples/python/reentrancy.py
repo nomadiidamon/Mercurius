@@ -1,4 +1,4 @@
-"""
+"""@example reentrancy.py
 Reentrancy: callbacks may publish and unsubscribe.
 
 Because callbacks run on the worker thread and publish() only appends to a queue,

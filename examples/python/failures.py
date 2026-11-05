@@ -1,4 +1,4 @@
-"""
+"""@example failures.py
 Failures: what happens when things go wrong.
 
   * An exception in a subscriber is logged; other subscribers still run and the

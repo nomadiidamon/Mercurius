@@ -1,4 +1,4 @@
-"""
+"""@example filtering.py
 Filtering: queues do not have to receive every event.
 
 publish() offers each event to every queue on the bus. A queue can refuse

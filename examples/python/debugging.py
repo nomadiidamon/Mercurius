@@ -1,4 +1,4 @@
-"""
+"""@example debugging.py
 Debugging: inspecting a bus, its queues and its subscriptions.
 
   * repr() of a bus, queue or subscription is meant to be readable.

@@ -15,7 +15,7 @@ DIR_SUFFIXES = (".egg-info",)
 PYTHON_ROOT_DIRS = {"build", "dist", ".eggs"}
 FILE_SUFFIXES = (".pyc", ".pyo")
 FILE_NAMES = {".coverage"}
-PYTHON_ROOT_FILES = {"test_output.txt"}
+PYTHON_ROOT_FILES = {"test_output.txt", "project.ini"}
 
 # Never descend into these.
 SKIP_DIRS = {".git", ".venv", "venv", "node_modules"}

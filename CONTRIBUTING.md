@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Thank you for your interest in contributing! This document outlines the guidelines and best practices for contributing to this project, which currently provides a Python implementation. A C++ implementation is not included in the repository.
+Thank you for your interest in contributing! This document outlines the guidelines and best practices for contributing to this project, which currently provides a Python implementation. A C++ implementation is planned but not yet implemented.
 
 ### Code of Conduct
 
@@ -44,7 +44,7 @@ git clone --recursive https://github.com/nomadiidamon/Mercurius <desiredLocation
 
 ### C++
 
-Not implemented in this repository.
+Planned, not yet implemented. The `cpp/` and `bindings/` directories are empty placeholders.
 
 ### Python
 
@@ -69,6 +69,10 @@ With the environment active and the working directory still set to `python/`, in
 python -m pip install -e ".[dev]"
 python -m pytest
 ```
+
+Run all examples with `python/scripts/run_examples.bat` or `python/scripts/run_examples.sh`. Every example must start with an `@example <file>.py` Doxygen marker in its docstring.
+
+The version is kept in [`project.ini`](project.ini), the [`Doxyfile`](Doxyfile) (`PROJECT_NUMBER`), and `python/src/Mercurius/__init__.py`; the `03-match-version` pre-commit hook and the build workflow require all three to match.
 
 The `dev` extra currently installs pytest. These commands use the package's configured test discovery and do not install linters or formatters.
 
