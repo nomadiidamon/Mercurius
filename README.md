@@ -17,12 +17,6 @@ requirement) lives in [project.ini](project.ini).
 | Python (`mercurius-events`, Python 3.10+) | Implemented; see [python/](python/) |
 | C++ | Planned, not yet implemented; `cpp/` and `bindings/` are empty placeholders |
 
-## Examples
-
-Runnable Python examples are in [examples/python](examples/python). Run all of
-them with `python/scripts/run_examples.bat` (Windows) or
-`python/scripts/run_examples.sh`.
-
 ## Documentation
 
 - [Concepts](docs/Concepts.md) introduces Mercurius's main pieces—events,
